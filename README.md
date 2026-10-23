@@ -29,9 +29,8 @@ sin depender de configuraciones manuales del servidor web.
 | **HTML5** | Semántico | Estructura del sitio: header, hero, secciones, formulario de contacto y footer |
 | **CSS3** | Variables CSS (design system) | Estilos, diseño responsive, animaciones, adaptación del mockup |
 | **JavaScript** | Vanilla (sin frameworks) | Sliders del hero, menús desplegables, modales "Saber Más", toast del formulario, scroll suave |
-| **Nginx** | 1.27 (Alpine) | Servidor web que entrega los archivos estáticos |
+| **Nginx** | Alpine (imagen oficial `nginx:alpine`) | Servidor web que entrega los archivos estáticos |
 | **Docker** | Engine 20.10+ | Empaquetado y distribución del sitio como imagen de contenedor |
-| **Docker Compose** | v2 | Orquestación: construir y levantar el sitio con un solo comando |
 
 ---
 
