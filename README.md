@@ -58,46 +58,44 @@ victor-nunez-web/
 
 - Tener instalado **Docker Engine** (20.10 o superior).
   Descarga: <https://docs.docker.com/get-docker/>
-- (Opcional) **Docker Compose v2** — incluido en Docker Desktop y en las
-  versiones recientes de Docker Engine para Linux.
 - La carpeta del proyecto debe estar completa (ver estructura anterior),
   incluyendo `imagenes/perfil.jpeg`.
 
-### Opción A — Con Docker Compose (recomendado)
+
+### 1. Construir la imagen
+
+Sitúate en la raíz del proyecto (donde está el `Dockerfile`) y ejecuta:
 
 ```bash
-# 1. Sitúate en la raíz del proyecto (donde está el Dockerfile)
-cd Nuñez Victor
-
-# 2. Construye la imagen y levanta el contenedor en segundo plano
-docker compose up -d --build
-
-# 3. Abre el sitio en tu navegador
-#    http://localhost:8080
+docker build -t victor-nunez-web .
 ```
 
-Comandos de gestión:
+### 2. Ejecutar el contenedor
 
 ```bash
-docker compose ps        # ver estado del contenedor
-docker compose logs -f   # ver logs de Nginx en vivo
-docker compose down      # detener y eliminar el contenedor
+docker run -d -p 8080:80 --name victor-nunez-web victor-nunez-web
 ```
 
-### Opción B — Con comandos Docker directos
+- `-d` : ejecuta el contenedor en segundo plano (detached).
+- `-p 8080:80` : mapea el puerto **8080** de tu PC al puerto **80** interno
+  del contenedor (donde Nginx escucha).
+- `--name victor-nunez-web` : asigna un nombre al contenedor para poder
+  gestionarlo fácilmente.
+
+### 3. Abrir el sitio
+
+En tu navegador:
+
+```
+http://localhost:8080
+```
+
+### Comandos de gestión
 
 ```bash
-# 1. Construir la imagen a partir del Dockerfile
-docker build -t victor-nunez-web:latest .
-
-# 2. Ejecutar el contenedor mapeando el puerto 8080 al 80 interno
-docker run -d -p 8080:80 --name victor-nunez-web victor-nunez-web:latest
-
-# 3. Abrir en el navegador
-#    http://localhost:8080
-
-# 4. Detener y limpiar cuando ya no lo necesites
-docker stop victor-nunez-web && docker rm victor-nunez-web
+docker ps                      # ver contenedores en ejecución
+docker stop victor-nunez-web   # detener el contenedor
+docker rm victor-nunez-web     # eliminar el contenedor detenido
 ```
 
 ### Cambiar el puerto
@@ -105,9 +103,9 @@ docker stop victor-nunez-web && docker rm victor-nunez-web
 Si el puerto `8080` está ocupado en tu máquina, cámbialo por otro libre
 (por ejemplo `9090`):
 
-- **Con Compose:** edita `docker-compose.yml` → `"9090:80"` y vuelve a
-  ejecutar `docker compose up -d`.
-- **Con docker run:** usa `-p 9090:80`.
+```bash
+docker run -d -p 9090:80 --name victor-nunez-web victor-nunez-web
+```
 
 El `80` de la derecha **no se modifica**: es el puerto interno donde Nginx
 escucha dentro del contenedor.
@@ -115,7 +113,9 @@ escucha dentro del contenedor.
 ### Actualizar el sitio tras hacer cambios
 
 ```bash
-docker compose up -d --build   # reconstruye la imagen con los archivos nuevos
+docker stop victor-nunez-web && docker rm victor-nunez-web
+docker build -t victor-nunez-web .
+docker run -d -p 8080:80 --name victor-nunez-web victor-nunez-web
 ```
 
 ---
@@ -134,11 +134,13 @@ La imagen del proyecto está publicada en Docker Hub:
 docker login
 
 # 2. Etiqueta la imagen local con tu usuario de Docker Hub
-docker tag victor-nunez-web:latest victornunez-13/victor-nunez-web:latest
+docker tag victor-nunez-web:latest victor124312/mi-perfil-profesional-victor-nunez:v1
 
 # 3. Sube la imagen al registro
-docker push victornunez-13/victor-nunez-web:latest
+docker push victor124312/mi-perfil-profesional-victor-nunez:v1
 ```
+> Para futuras versiones de la imagen puedes usar etiquetas nuevas
+> (`:v2`, `:v3`, …) y repetir el paso del `docker push`.
 
 **Cómo descargar y ejecutar la imagen desde Docker Hub** (en cualquier
 servidor con Docker):
@@ -147,7 +149,6 @@ servidor con Docker):
 docker pull victor124312/mi-perfil-profesional-victor-nunez:v1
 docker run -d -p 8080:80 --name victor-nunez-web victor124312/mi-perfil-profesional-victor-nunez:v1
 ```
-
 ---
 
 ## 🐙 Repositorio en GitHub
@@ -161,9 +162,10 @@ El código fuente del proyecto está alojado en GitHub, bajo el usuario
 **Clonar el repositorio y desplegarlo con Docker:**
 
 ```bash
-git clone https://github.com/victornunez-13/victor-nunez-web.git
-cd victor-nunez-web
-docker compose up -d --build
+git clone https://github.com/victornunez-13/Mi-perfil-profesional-Victor-Nu-ez.git
+cd Mi-perfil-profesional-Victor-Nu-ez
+docker build -t victor-nunez-web .
+docker run -d -p 8080:80 --name victor-nunez-web victor-nunez-web
 
 # El sitio queda disponible en http://localhost:8080
 ```
